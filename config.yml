@@ -1,0 +1,10 @@
+type: master
+database:
+  host: localhost
+  port: 3306
+  user: root
+  password: pass123
+  name: server_db
+kafka:
+  brokers: kafka:9092
+publish_delay: 1
