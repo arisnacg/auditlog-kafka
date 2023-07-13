@@ -42,7 +42,7 @@ class Init(object):
     def getTableName(self):
         res = self.db.select(
             'SELECT table_name FROM information_schema.tables\
-      WHERE table_schema = "%s" AND (table_name NOT IN ("audit_changelog"))'
+      WHERE table_schema = "%s" AND (table_name NOT IN ("audit_changelog", "testing"))'
             % (self.dbName)
         )
         return res
@@ -145,4 +145,8 @@ class Init(object):
 
     def dropChangelogTable(self):
         self.dropTable("audit_changelog")
-        print("[-] Auit changelog table deleted")
+        print("[-] Audit changelog table deleted")
+
+    def truncateChangelogTable(self):
+        self.truncateTable("audit_changelog")
+        print("[-] Audit changelog table truncated")

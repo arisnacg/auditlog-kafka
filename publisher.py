@@ -5,16 +5,6 @@ from database import Database
 import json
 
 
-def on_success(record):
-    print(record.topic)
-    print(record.partition)
-    print(record.offset)
-
-
-def on_error(excp):
-    raise Exception(excp)
-
-
 class Publisher(object):
     def __init__(self, dbHost, dbPort, dbUser, dbPass, dbName, kafkaBrokers, delay=1):
         # database

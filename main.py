@@ -3,14 +3,16 @@ import yaml
 import os
 from init import Init
 from publisher import Publisher
+from subscriber import Subscriber
+
 
 # Read config file
 def readConfigFile(filepath):
     if not os.path.isfile(filepath):
         print(f"Error: File '{filepath}' does not exist.")
         exit(1)
-    
-    with open(filepath, 'r') as file:
+
+    with open(filepath, "r") as file:
         try:
             data = yaml.safe_load(file)
             return data
@@ -21,10 +23,11 @@ def readConfigFile(filepath):
 
 main = typer.Typer()
 
+
 # Create changelog and triggers
 @main.command()
-def install(filepath: str = "config.yml"):
-    config = readConfigFile(filepath)
+def install(file: str = "config.yml"):
+    config = readConfigFile(file)
     init = Init(
         dbHost=config["database"]["host"],
         dbPort=config["database"]["port"],
@@ -38,16 +41,16 @@ def install(filepath: str = "config.yml"):
         init.createTableChangelog()
         init.createTriggerTable()
     elif config["type"] == "slave":
-        init.dropChangelogTable()
-        init.dropTriggerAuditLog()
+        init.truncateChangelogTable()
     else:
         print(f'Error: Unknown type: {config["type"]}')
         exit(1)
 
+
 # Publish database changelog to slave
 @main.command()
-def publish(filepath: str = "config.yml"):
-    config = readConfigFile(filepath)
+def publish(file: str = "config.yml"):
+    config = readConfigFile(file)
     if config["type"] != "master":
         print("Error: Only master type can publish")
         exit(1)
@@ -59,7 +62,7 @@ def publish(filepath: str = "config.yml"):
         dbPass=config["database"]["password"],
         dbName=config["database"]["name"],
         kafkaBrokers=config["kafka"]["brokers"],
-        delay=config["publish_delay"]
+        delay=config["publish_delay"],
     )
     publisher.databaseConnection()
     publisher.createProducer()
@@ -67,8 +70,23 @@ def publish(filepath: str = "config.yml"):
 
 
 @main.command()
-def subscribe():
-    typer.echo(f"Consume")
+def subscribe(file: str = "config.yml"):
+    config = readConfigFile(file)
+    if config["type"] != "slave":
+        print("Error: Only slave type can publish")
+        exit(1)
+
+    subscriber = Subscriber(
+        dbHost=config["database"]["host"],
+        dbPort=config["database"]["port"],
+        dbUser=config["database"]["user"],
+        dbPass=config["database"]["password"],
+        dbName=config["database"]["name"],
+        kafkaBrokers=config["kafka"]["brokers"],
+    )
+    subscriber.databaseConnection()
+    subscriber.subscribe()
+
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,3 @@
+let l:bm_file_version = 1
+let l:bm_sessions = {'default': {'/home/arisna/github/auditlog-kafka/subscriber.py': [{'sign_idx': 9500, 'line_nr': 28, 'content': '    def subscribe(self):'},],}}
+let l:bm_current_session = 'default'
