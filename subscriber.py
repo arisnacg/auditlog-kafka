@@ -33,7 +33,6 @@ class Subscriber(object):
         }
         brokers = self.kafkaBrokers.split(",")
         brokers = [e.strip() for e in brokers]
-        print(brokers)
         consumer = KafkaConsumer(
             self.topic,
             bootstrap_servers=brokers,

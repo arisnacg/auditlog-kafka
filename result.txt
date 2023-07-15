@@ -1,0 +1,24 @@
+100 data:
+- insert: 2
+- update: 2
+- delete: 2
+
+200 data:
+- insert: 3
+- update: 4
+- delete: 4
+
+400 data:
+- insert: 6
+- update: 6
+- delete: 6
+
+600 data:
+- insert: 9
+- update: 8
+- delete: 8
+
+1000 data:
+- insert: 11
+- update: 12
+- delete: 11

@@ -49,7 +49,7 @@ def install(file: str = "config.yml"):
 
 # Publish database changelog to slave
 @main.command()
-def publish(file: str = "config.yml"):
+def produce(file: str = "config.yml"):
     config = readConfigFile(file)
     if config["type"] != "master":
         print("Error: Only master type can publish")
@@ -70,7 +70,7 @@ def publish(file: str = "config.yml"):
 
 
 @main.command()
-def subscribe(file: str = "config.yml"):
+def consume(file: str = "config.yml"):
     config = readConfigFile(file)
     if config["type"] != "slave":
         print("Error: Only slave type can publish")
